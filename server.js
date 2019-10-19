@@ -27,7 +27,6 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 
-//Routes/////////////////////////////////////////////////////////
 app.get("/", function(req, res) {
   res.redirect("/scrape");
 });
@@ -146,7 +145,6 @@ app.get("/scrape", function(req, res) {
         .attr("href");
       result.scrapeTime = moment.now();
 
-      //Define how unwanted text will be dropped
       function chopOffUnwantedText() {
         let fullText = result.summary;
         let fullTextLength = result.summary.length;
