@@ -1,4 +1,4 @@
-<div class='container animated fadeInRight'>
+<div class='container'>
     <br>
     <button id='goBackToArticles' class='btn'><i class="fas fa-backward fa-2x text-primary"></i></i></button></a>
     <br><br>
@@ -86,7 +86,6 @@
 <script>
     $(document).on("click", "#goBackToArticles", function () {
         let url = `/articles`
-        $('.container').addClass('animated fadeOutRight')
         setTimeout(() => {
             window.location.replace(url)
         }, 400)

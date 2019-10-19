@@ -1,4 +1,4 @@
-<div class='container animated fadeInLeft'>
+<div class='container'>
     <div class='row mt-5'>
         <div class='col'>
             <div class="card-columns">
@@ -33,7 +33,6 @@
     $(document).on("click", ".news-card", function () {
         let articleToPull = $(this).attr('data-id')
         let url = `/articles/${articleToPull}`
-        $('.container').addClass('animated fadeOutLeft')
         setTimeout(() => {
             window.location.replace(url)
         }, 400)
