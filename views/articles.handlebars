@@ -1,0 +1,54 @@
+<div class='container animated fadeInLeft'>
+    <div class='row mt-5'>
+        <div class='col'>
+            <div class="card-columns">
+                {{#each record}}
+                <div class='col'>
+                    <card class='mb-4 p-3 card shadow'>
+                        <div>
+                            <div data-id="{{this._id}}" class='deleteButton text-right'><i class="fas fa-times"></i>
+                            </div>
+                        </div>
+                        <div data-id="{{this._id}}" class="card-body news-card">
+                            <strong>{{this.headline}}</strong>
+                            <span>{{this.summary}}</span> <small><a href='{{this.url}}'>Read full article.</a></small>
+                            <br><br>
+                            <small>Scraped from 9to5mac.com at {{this.scrapeTime}}</small>
+                        </div>
+                        <div class='text-right'>
+                            {{#if this.comments}}
+                            <span class="badge badge-pill badge-info"><i class="fas fa-comment-alt"></i>
+                                {{this.comments.length}}</span>
+                            {{/if}}
+                        </div>
+                    </card>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).on("click", ".news-card", function () {
+        let articleToPull = $(this).attr('data-id')
+        let url = `/articles/${articleToPull}`
+        $('.container').addClass('animated fadeOutLeft')
+        setTimeout(() => {
+            window.location.replace(url)
+        }, 400)
+    })
+</script>
+
+<script>
+    $(document).on("click", ".deleteButton", function () {
+        let articleToDelete = $(this).attr('data-id')
+        $.ajax({
+            url: 'articles/' + articleToDelete,
+            method: "DELETE",
+        }).then(function (response) {
+            console.log(response);
+        })
+        $(this).parent().parent().fadeOut()
+    })
+</script>

@@ -1,0 +1,126 @@
+<div class='container animated fadeInRight'>
+    <br>
+    <button id='goBackToArticles' class='btn'><i class="fas fa-backward fa-2x text-primary"></i></i></button></a>
+    <br><br>
+    <div class='row'>
+        <div class='col'>
+            {{#each record}}
+            <card data-id="{{this._id}}" class='mb-4 p-3 card shadow news-card'>
+                <strong>{{this.headline}}</strong>
+                <br>
+                <p>{{this.summary}}</p>
+                <small id='scrapeTime' data-scrapeTime='{{this.scrapeTime}}'>Scraped from 9to5mac.com at
+                    {{this.scrapeTime}}</small>
+                <br>
+                <small><a href='{{this.url}}'>Read full article.</a></small>
+            </card>
+            {{/each}}
+            <form id='makeNewCommentForm' class='card p-3'>
+                <h5>Add a Comment</h5>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" id="user-name" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label>Comment</label>
+                    <textarea class="form-control" id="comment-text" placeholder="Enter your comment here."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class='col'>
+            <div id='commentsContainer' class='row'>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formatScrapeTime() {
+        let time = $('#scrapeTime').attr('data-scrapeTime')
+        let formattedTime = moment(time).format("YYYY-MM-DD h:mm:ss A");
+        console.log(formattedTime)
+        $('#scrapeTime').text(`Scraped from 9to5mac.com at ${formattedTime}.`)
+    }
+</script>
+
+<script>
+    function clearThenPullComments() {
+        $('#commentsContainer').empty()
+        let articleToPull = $('.news-card').attr('data-id')
+        let url = `/comments/${articleToPull}`
+        $.ajax({
+            url: url,
+            method: "GET",
+        }).then(function (response) {
+            console.log(response);
+            if (response.length !== 0) {
+                for (var i = 0; i < response.length; i++) {
+                    $('#commentsContainer').append(`
+                <section class='col-12 mb-4 card p-3'>
+                    <div class='text-right'><small data-id=${response[i]._id} class='deleteButton'><i class="far fa-trash-alt fa-lg"></i></small></div>
+                    <div class="media pl-2">
+                        <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px' width='50px'>
+                        <div class="media-body">
+                            <h5 class="mt-0">${response[i].user}</h5>
+                            <p>${response[i].commentText}</p>
+                            <small class='commentTime' data-commentTime='${response[i].createTime}'>Commented at: ${response[i].createTime}</small>
+                        </div>
+                    </div>
+                </section>
+            `)
+                }
+            } else {
+                $('#commentsContainer').append(`
+                <div class="alert alert-warning col" role="alert">
+                    No comments exist for this article yet.
+                </div>`)
+            }
+
+        });
+    }
+    clearThenPullComments()
+    formatScrapeTime()
+</script>
+
+<script>
+    $(document).on("click", "#goBackToArticles", function () {
+        let url = `/articles`
+        $('.container').addClass('animated fadeOutRight')
+        setTimeout(() => {
+            window.location.replace(url)
+        }, 400)
+    })
+</script>
+
+<script>
+    $(document).on("submit", "#makeNewCommentForm", function () {
+        event.preventDefault();
+        $.ajax({
+            url: '/addacomment',
+            method: "POST",
+            data: {
+                user: $('#user-name').val().trim(),
+                commentText: $('#comment-text').val().trim(),
+                articleId: $('.news-card').attr('data-id')
+            }
+        }).then(function (response) {
+            console.log(response);
+            clearThenPullComments()
+        })
+        $('form').trigger("reset");
+    })
+</script>
+
+<script>
+    $(document).on("click", ".deleteButton", function () {
+        let commentToDelete = $(this).attr('data-id')
+        $.ajax({
+            url: '/comments/' + commentToDelete,
+            method: "DELETE",
+        }).then(function (response) {
+            console.log(response);
+        })
+        $(this).parent().parent().parent().fadeOut()
+    })
+</script>

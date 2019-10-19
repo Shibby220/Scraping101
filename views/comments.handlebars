@@ -1,0 +1,18 @@
+<div class='container'>
+    <div class='row'>
+        <div class='col'>
+            {{#each record}}
+            <div class="media pl-2" style="border-left: 1px solid gray">
+                <img src="https://opengameart.org/sites/default/files/Person_0.png" class="mr-3" height='50px'
+                    width='50px'>
+                <div class="media-body">
+                    <h5 class="mt-0">{{this.user}}</h5>
+                    <p>{{this.commentText}}</p>
+                    <small>Commented on the article at: {{this.associatedArticleURL}}</small>
+                </div>
+            </div>
+            <br>
+            {{/each}}
+        </div>
+    </div>
+</div>
