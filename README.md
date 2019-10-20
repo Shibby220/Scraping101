@@ -2,7 +2,7 @@
 
 ## Overview
 
-Scraping101 is web app that uses Mongoose and Cheerio to scrape news articles and lets users view articles and leave comments on them as well.
+Scraping101 is web app that uses Mongoose and Cheerio to scrape news articles and lets users leave comments on them as well.
 
 View the deployed product on <a href="https://young-garden-78297.herokuapp.com/">Heroku.</a>
 
